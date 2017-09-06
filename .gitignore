@@ -1,0 +1,10 @@
+/bin/
+/build/
+/dist/
+.gradle
+.idea
+!gradle-wrapper.jar
+.classpath
+.project
+/.settings/
+/out/
