@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1018.robot.commands;
+package org.usfirst.frc.team1018.robot.commands.paddles;
 
 import org.usfirst.frc.team1018.lib.BasicCommand;
 import org.usfirst.frc.team1018.robot.subsystems.Paddles;

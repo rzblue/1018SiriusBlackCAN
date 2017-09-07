@@ -11,13 +11,15 @@ import org.usfirst.frc.team1018.robot.RobotConfig;
  * @author Ryan Blue
  */
 public class GearRotator extends Subsystem {
+    public RobotConfig.GearRotatorConfig CONFIG = RobotConfig.GEAR_ROTATOR_CONFIG;
+
     private static GearRotator instance;
     private boolean override;
     private boolean enabled;
     private GearStateMachine stateMachine = new GearStateMachine();
-    private TalonSRX rotatorMotor = new TalonSRX(RobotConfig.GearRotatorConfig.GEAR_ROTATOR_PWM);
-    private DigitalInput banner = new DigitalInput(RobotConfig.GearRotatorConfig.BANNER_DIO);
-    private LidarLite lidar = new LidarLite(RobotConfig.GearRotatorConfig.LIDAR_I2C);
+    private TalonSRX rotatorMotor = new TalonSRX(CONFIG.GEAR_ROTATOR_PWM);
+    private DigitalInput banner = new DigitalInput(CONFIG.BANNER_DIO);
+    private LidarLite lidar = new LidarLite(CONFIG.LIDAR_I2C);
     private Runnable stateMachineRunnable = new Runnable() {
         @Override
         public void run() {

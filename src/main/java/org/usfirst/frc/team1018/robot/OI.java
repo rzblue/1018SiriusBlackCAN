@@ -3,7 +3,11 @@ package org.usfirst.frc.team1018.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.usfirst.frc.team1018.lib.util.MultipleJoystickButton;
-import org.usfirst.frc.team1018.robot.commands.*;
+import org.usfirst.frc.team1018.robot.commands.brakes.BrakesDownCommand;
+import org.usfirst.frc.team1018.robot.commands.climber.ClimbDownCommand;
+import org.usfirst.frc.team1018.robot.commands.climber.ClimbUpCommand;
+import org.usfirst.frc.team1018.robot.commands.gearholder.RotateGearOverrideCommand;
+import org.usfirst.frc.team1018.robot.commands.paddles.PaddlesInCommand;
 
 /**
  * @author Ryan Blue
