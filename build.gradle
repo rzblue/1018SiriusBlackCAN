@@ -14,6 +14,7 @@ dependencies {
     compile wpilib()
     //compile talonSrx()
     compile navx()
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 def robotManifest = {
