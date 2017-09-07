@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Waypoint;
+import org.usfirst.frc.team1018.robot.commands.auto.PathfinderAuto;
+import org.usfirst.frc.team1018.robot.pathfinder.PathfinderWaypoints;
 import org.usfirst.frc.team1018.robot.subsystems.Brakes;
 import org.usfirst.frc.team1018.robot.subsystems.Climber;
 import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
@@ -25,7 +30,7 @@ public class Robot extends IterativeRobot {
     private static Brakes brakes;
     private static GearRotator gearRotator;
     Command autonomousCommand;
-    SendableChooser<Command> chooser = new SendableChooser<>();
+    SendableChooser<Waypoint[]> chooser = new SendableChooser<>();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -33,6 +38,8 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
+        chooser.addDefault("Blue Right Peg", PathfinderWaypoints.BLUE_RIGHT);
+        SmartDashboard.putData("Autonomous:", chooser);
         drivetrain = Drivetrain.getInstance();
         climber = Climber.getInstance();
         brakes = Brakes.getInstance();
@@ -68,7 +75,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
-        autonomousCommand = chooser.getSelected();
+        autonomousCommand = new PathfinderAuto(chooser.getSelected());
 
 		/*
          * String autoSelected = SmartDashboard.getString("Auto Selector",
