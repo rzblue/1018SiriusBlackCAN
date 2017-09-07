@@ -1,11 +1,10 @@
 // Do not mess with the following 6 lines
 plugins {
-  id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
-
 
 // This is where you select which operating system to build for.
 
@@ -27,94 +26,100 @@ def projectName = 'CameraVision'
 apply from: 'dependencies.gradle'
 
 repositories {
-  mavenCentral()
-  maven {
-    url "http://first.wpi.edu/FRC/roborio/maven/release"
-  }
+    mavenCentral()
+    maven {
+        url "http://first.wpi.edu/FRC/roborio/maven/release"
+    }
 }
-
+project('vision-nt') {
+    apply plugin: 'java'
+    dependencies {
+        compile ntcoreDep()
+    }
+}
 dependencies {
-  compile ntcoreDep()
-  compile cscoreDep()
-  compile 'org.opencv:opencv-java:3.1.0'
+    compile ntcoreDep()
+    compile cscoreDep()
+    compile 'org.opencv:opencv-java:3.1.0'
+    compile project(':vision-nt')
 }
 
 jar {
-  baseName = projectName
+    baseName = projectName
 }
 
 shadowJar {
-  baseName = projectName
+    baseName = projectName
 }
 
 distributions {
-  main {
-    baseName = projectName
-    contents {
-      from (openCvUnzipLocation) {
-        exclude 'META-INF'
-        exclude '**/MANIFEST.MF'
-        into 'bin/'
-      }
+    main {
+        baseName = projectName
+        contents {
+            from(openCvUnzipLocation) {
+                exclude 'META-INF'
+                exclude '**/MANIFEST.MF'
+                into 'bin/'
+            }
+        }
     }
-  }
 }
 
 def outputDirectory = file("${rootDir}/vision-output")
 
 task writeExecuteScript() {
-  dependsOn jar
-  doLast {
-    if (buildType == "windows") {
-      def runFile = new File("${buildDir}/run${projectName}.bat")
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
-    } else {
-      def runFile = new File("${buildDir}/run${projectName}")
-      runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+    dependsOn jar
+    doLast {
+        if (buildType == "windows") {
+            def runFile = new File("${buildDir}/run${projectName}.bat")
+            runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+        } else {
+            def runFile = new File("${buildDir}/run${projectName}")
+            runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+        }
     }
-  }
 }
 
 task copyToOutput(type: Copy) {
-  dependsOn shadowJar
-  dependsOn unzipOpenCv
-  dependsOn writeExecuteScript
-  destinationDir = outputDirectory
-  from (file(shadowJar.archivePath)) {
-  }
-  from (openCvUnzipLocation) {
-    exclude 'META-INF'
-    exclude '**/MANIFEST.MF'
-  }
-  if (buildType == "windows") {
-    from (file("${buildDir}/run${projectName}.bat")) {
+    dependsOn shadowJar
+    dependsOn unzipOpenCv
+    dependsOn writeExecuteScript
+    destinationDir = outputDirectory
+    from(file(shadowJar.archivePath)) {
     }
-  } else {
-    from (file("${buildDir}/run${projectName}")) {
+    from(openCvUnzipLocation) {
+        exclude 'META-INF'
+        exclude '**/MANIFEST.MF'
     }
-  }
+    if (buildType == "windows") {
+        from(file("${buildDir}/run${projectName}.bat")) {
+        }
+    } else {
+        from(file("${buildDir}/run${projectName}")) {
+        }
+    }
 }
 
 task zipOutput(type: Zip) {
-  baseName = projectName
-  duplicatesStrategy = 'exclude'
-  dependsOn shadowJar
-  dependsOn unzipOpenCv
-  destinationDir = outputDirectory
-  from (file(shadowJar.archivePath)) {
-  }
-  from (openCvUnzipLocation) {
-    exclude 'META-INF'
-    exclude '**/MANIFEST.MF'
-  }
-  if (buildType == "windows") {
-    from (file("${buildDir}/run${projectName}.bat")) {
+    baseName = projectName
+    duplicatesStrategy = 'exclude'
+    dependsOn shadowJar
+    dependsOn unzipOpenCv
+    destinationDir = outputDirectory
+    from(file(shadowJar.archivePath)) {
     }
-  } else {
-    from (file("${buildDir}/run${projectName}")) {
-      fileMode 0777
+    from(openCvUnzipLocation) {
+        exclude 'META-INF'
+        exclude '**/MANIFEST.MF'
     }
-  }
+    if (buildType == "windows") {
+        from(file("${buildDir}/run${projectName}.bat")) {
+        }
+    } else {
+        from(file("${buildDir}/run${projectName}")) {
+            fileMode 0777
+        }
+    }
 }
 
 distZip.dependsOn unzipOpenCv
@@ -127,5 +132,5 @@ build.dependsOn zipOutput
 run.dependsOn unzipOpenCv
 
 clean {
-  delete outputDirectory
+    delete outputDirectory
 }
