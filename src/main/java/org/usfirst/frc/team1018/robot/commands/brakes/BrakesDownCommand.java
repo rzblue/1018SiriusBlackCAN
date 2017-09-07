@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1018.robot.commands;
+package org.usfirst.frc.team1018.robot.commands.brakes;
 
 import org.usfirst.frc.team1018.lib.BasicCommand;
 import org.usfirst.frc.team1018.robot.subsystems.Brakes;
@@ -6,10 +6,10 @@ import org.usfirst.frc.team1018.robot.subsystems.Brakes;
 /**
  * @author Ryan Blue
  */
-public class BrakesCommand extends BasicCommand {
+public class BrakesDownCommand extends BasicCommand {
     private Brakes brakes = Brakes.getInstance();
 
-    public BrakesCommand() {
+    public BrakesDownCommand() {
         requires(brakes);
     }
 
@@ -17,7 +17,5 @@ public class BrakesCommand extends BasicCommand {
         brakes.set();
     }
 
-    protected void end() {
-        brakes.release();
-    }
+    protected void end() {}
 }

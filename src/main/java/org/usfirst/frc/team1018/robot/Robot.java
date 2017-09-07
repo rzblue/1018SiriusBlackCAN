@@ -37,7 +37,7 @@ public class Robot extends IterativeRobot {
         climber = Climber.getInstance();
         brakes = Brakes.getInstance();
         gearRotator = GearRotator.getInstance();
-        oi = new OI();
+        oi = OI.getInstance();
     }
 
     /**
@@ -48,6 +48,11 @@ public class Robot extends IterativeRobot {
     @Override
     public void disabledInit() {
         gearRotator.disable();
+    }
+
+    @Override
+    public void disabledPeriodic() {
+        Scheduler.getInstance().run();
     }
 
     /**
@@ -77,6 +82,15 @@ public class Robot extends IterativeRobot {
             autonomousCommand.start();
     }
 
+    /**
+     * This function is called periodically during autonomous
+     */
+    @Override
+    public void autonomousPeriodic() {
+        gearRotator.disable();
+        Scheduler.getInstance().run();
+    }
+
     @Override
     public void teleopInit() {
         gearRotator.enable();
@@ -86,20 +100,6 @@ public class Robot extends IterativeRobot {
         // this line or comment it out.
         if(autonomousCommand != null)
             autonomousCommand.cancel();
-    }
-
-    @Override
-    public void disabledPeriodic() {
-        Scheduler.getInstance().run();
-    }
-
-    /**
-     * This function is called periodically during autonomous
-     */
-    @Override
-    public void autonomousPeriodic() {
-        gearRotator.disable();
-        Scheduler.getInstance().run();
     }
 
     /**

@@ -8,10 +8,12 @@ import org.usfirst.frc.team1018.robot.RobotConfig;
  * @author Ryan Blue
  */
 public class Climber extends Subsystem {
+    public RobotConfig.ClimberConfig CONFIG = RobotConfig.CLIMBER_CONFIG;
+
     private static Climber instance;
 
-    private TalonSRX lowerClimber = new TalonSRX(RobotConfig.ClimberConfig.CLIMBER_LOWER_PWM);
-    private TalonSRX upperClimber = new TalonSRX(RobotConfig.ClimberConfig.CLIMBER_UPPER_PWM);
+    private TalonSRX lowerClimber = new TalonSRX(CONFIG.CLIMBER_LOWER_PWM);
+    private TalonSRX upperClimber = new TalonSRX(CONFIG.CLIMBER_UPPER_PWM);
 
     private Climber() {
         lowerClimber.setInverted(true);
