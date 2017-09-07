@@ -3,6 +3,7 @@ package org.usfirst.frc.team1018.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team1018.robot.RobotConfig;
+import org.usfirst.frc.team1018.robot.commands.BrakesUpCommand;
 
 /**
  * @author Ryan Blue
@@ -30,8 +31,7 @@ public class Brakes extends Subsystem {
     }
 
     public void initDefaultCommand() {
-        // Set the default command, if any, for a subsystem here. Example:
-        //    setDefaultCommand(new MySpecialCommand());
+        setDefaultCommand(new BrakesUpCommand());
     }
 }
 

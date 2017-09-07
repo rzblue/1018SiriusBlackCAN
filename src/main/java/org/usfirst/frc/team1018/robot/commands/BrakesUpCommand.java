@@ -6,18 +6,16 @@ import org.usfirst.frc.team1018.robot.subsystems.Brakes;
 /**
  * @author Ryan Blue
  */
-public class BrakesCommand extends BasicCommand {
-    private Brakes brakes = Brakes.getInstance();
+public class BrakesUpCommand extends BasicCommand {
+    Brakes brakes = Brakes.getInstance();
 
-    public BrakesCommand() {
+    public BrakesUpCommand() {
         requires(brakes);
     }
 
     protected void runOnce() {
-        brakes.set();
-    }
-
-    protected void end() {
         brakes.release();
     }
+
+    protected void end() {}
 }

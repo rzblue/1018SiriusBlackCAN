@@ -12,9 +12,9 @@ import org.usfirst.frc.team1018.robot.RobotConfig;
  */
 public class GearRotator extends Subsystem {
     private static GearRotator instance;
-    boolean override;
-    boolean enabled;
-    GearStateMachine stateMachine = new GearStateMachine();
+    private boolean override;
+    private boolean enabled;
+    private GearStateMachine stateMachine = new GearStateMachine();
     private TalonSRX rotatorMotor = new TalonSRX(RobotConfig.GearRotatorConfig.GEAR_ROTATOR_PWM);
     private DigitalInput banner = new DigitalInput(RobotConfig.GearRotatorConfig.BANNER_DIO);
     private LidarLite lidar = new LidarLite(RobotConfig.GearRotatorConfig.LIDAR_I2C);
@@ -25,7 +25,6 @@ public class GearRotator extends Subsystem {
             if(spin) rotate();
             else stop();
         }
-
     };
     /**
      * Schedules repeated execution of state machine
@@ -42,24 +41,11 @@ public class GearRotator extends Subsystem {
         notifier = new Notifier(stateMachineRunnable);
     }
 
-    public static GearRotator getInstance() {
-        if(instance == null) instance = new GearRotator();
-        return instance;
-    }
-
     /**
      * Spins the motor
      */
     public void rotate() {
         rotatorMotor.set(1);
-    }
-
-    public boolean isGearAligned() {
-        return !banner.get();
-    }
-
-    public double getLidarDistance() {
-        return lidar.getDistanceInches();
     }
 
     /**
@@ -69,11 +55,29 @@ public class GearRotator extends Subsystem {
         rotatorMotor.set(0);
     }
 
-    public void initDefaultCommand() {
-        // Set the default command, if any, for a subsystem here. Example:
-        //    setDefaultCommand(new MySpecialCommand());
+    /**
+     * Returns true if the gear is properly aligned so that it may be placed on a peg.
+     *
+     * @return
+     */
+    public boolean isGearAligned() {
+        return !banner.get();
     }
 
+    /**
+     * Returns the distance in 'inches' returned by the lidar sensor.
+     *
+     * @return
+     */
+    public double getLidarDistance() {
+        return lidar.getDistanceInches();
+    }
+
+    /**
+     * When set to true, flipper motor spins constantly
+     *
+     * @param override Override the closed loop state machine
+     */
     public void setOverride(boolean override) {
         this.override = override;
     }
@@ -90,6 +94,16 @@ public class GearRotator extends Subsystem {
         notifier.startPeriodic(period);
         enabled = true;
     }
+
+    public static GearRotator getInstance() {
+        if(instance == null) instance = new GearRotator();
+        return instance;
+    }
+
+    public void initDefaultCommand() {
+        // Set the default command, if any, for a subsystem here. Example:
+        //    setDefaultCommand(new MySpecialCommand());
+    }
 }
 
 /**
@@ -102,12 +116,12 @@ class GearStateMachine {
         return state.process(this, isGearAligned, lidar);
     }
 
-    public void reset() {
-        setState(State.WAITING);
-    }
-
     private void setState(State state) {
         this.state = state;
+    }
+
+    public void reset() {
+        setState(State.WAITING);
     }
 
     public enum State implements IState {
