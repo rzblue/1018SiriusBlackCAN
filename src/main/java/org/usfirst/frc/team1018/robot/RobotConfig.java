@@ -43,7 +43,7 @@ public final class RobotConfig {
 
         public final boolean RIGHT_ENCODER_REVERSE_CFG = true;
         public final boolean LEFT_ENCODER_REVERSE_CFG = false;
-        public final int ENCODER_TICKS_PER_REV_CFG = 1024;
+        public final int ENCODER_TICKS_PER_REV_CFG = 256;
         public final double WHEEL_DIAMETER_M_CFG = 0.1524;
         public final double ENCODER_DIST_PER_PULSE_CFG = 0.074;
 
