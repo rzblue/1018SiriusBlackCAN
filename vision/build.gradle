@@ -31,17 +31,11 @@ repositories {
         url "http://first.wpi.edu/FRC/roborio/maven/release"
     }
 }
-project('vision-nt') {
-    apply plugin: 'java'
-    dependencies {
-        compile ntcoreDep()
-    }
-}
+
 dependencies {
     compile ntcoreDep()
     compile cscoreDep()
     compile 'org.opencv:opencv-java:3.1.0'
-    compile project(':vision-nt')
 }
 
 jar {
