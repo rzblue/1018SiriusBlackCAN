@@ -1,12 +1,13 @@
 package org.usfirst.frc.team1018.robot;
 
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 import org.usfirst.frc.team1018.robot.commands.auto.PathfinderAuto;
 import org.usfirst.frc.team1018.robot.pathfinder.PathfinderWaypoints;
@@ -36,6 +37,14 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
+        new Thread(() -> {
+            UsbCamera camera = new UsbCamera("CoprocessorCamera", 0);
+            // Set the resolution for our camera, since this is over USB
+            camera.setResolution(320, 240);
+            // This stores our reference to our mjpeg server for streaming the input image
+            MjpegServer inputStream = new MjpegServer("MJPEG Server", 1185);
+            inputStream.setSource(camera);
+        }).start();
         chooser.addObject("Blue Right Peg", PathfinderWaypoints.BLUE_RIGHT);
         chooser.addObject("Blue Left Peg", PathfinderWaypoints.BLUE_LEFT);
         SmartDashboard.putData("Autonomous:", chooser);

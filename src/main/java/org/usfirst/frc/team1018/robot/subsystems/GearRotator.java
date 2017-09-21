@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1018.lib.LidarLite;
+import org.usfirst.frc.team1018.lib.LidarLiteSensor;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
 /**
@@ -20,7 +20,7 @@ public class GearRotator extends Subsystem {
     private GearStateMachine stateMachine = new GearStateMachine();
     private TalonSRX rotatorMotor = new TalonSRX(CONFIG.GEAR_ROTATOR_PWM);
     private DigitalInput banner = new DigitalInput(CONFIG.BANNER_DIO);
-    private LidarLite lidar = new LidarLite(CONFIG.LIDAR_I2C);
+    private LidarLiteSensor lidar = new LidarLiteSensor(CONFIG.LIDAR_I2C);
     private Runnable stateMachineRunnable = new Runnable() {
         @Override
         public void run() {
@@ -73,7 +73,7 @@ public class GearRotator extends Subsystem {
      * @return
      */
     public double getLidarDistance() {
-        return lidar.getDistanceInches();
+        return lidar.getDistance();
     }
 
     /**

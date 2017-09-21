@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  * @author Ryan Blue
  */
 public class VisionNetworkTable {
-    private enum  VisionTableKeys {
+    private enum VisionTableKeys {
 
     }
     private final String VISION_TABLE_KEY = "vision";
