@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
 /**
@@ -30,6 +31,7 @@ public class Drivetrain extends Subsystem {
     private boolean fieldOriented = CONFIG.FIELD_ORIENTED_CFG;
 
     private Drivetrain() {
+        driveHelper.setSafetyEnabled(false);
         rearRight.setInverted(true);
         frontRight.setInverted(true);
         rightEncoder.reset();
@@ -75,6 +77,16 @@ public class Drivetrain extends Subsystem {
 
     public double getYaw() {
         return navX.getYaw();
+    }
+
+    public void outputToSmartDashboard() {
+        SmartDashboard.putNumber("Front Left Motor: ", frontLeft.get());
+        SmartDashboard.putNumber("Front Right Motor: ", frontRight.get());
+        SmartDashboard.putNumber("Rear Left Motor: ", rearLeft.get());
+        SmartDashboard.putNumber("Rear Right Motor: ", rearRight.get());
+        SmartDashboard.putNumber("Left encoder count: ", getLeftEncoderTicks());
+        SmartDashboard.putNumber("Right encoder count: ", getRightEncoderTicks());
+        SmartDashboard.putNumber("Gyro Yaw: ", getYaw());
     }
 
     protected void initDefaultCommand() {

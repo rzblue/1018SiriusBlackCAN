@@ -2,6 +2,7 @@ package org.usfirst.frc.team1018.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 import org.usfirst.frc.team1018.robot.commands.brakes.BrakesUpCommand;
 
@@ -34,6 +35,10 @@ public class Brakes extends Subsystem {
 
     public void initDefaultCommand() {
         setDefaultCommand(new BrakesUpCommand());
+    }
+
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("Brakes State: ", brakesSolenoid.get() == DoubleSolenoid.Value.kForward ? "On" : "Off");
     }
 }
 

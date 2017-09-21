@@ -2,6 +2,7 @@ package org.usfirst.frc.team1018.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 import org.usfirst.frc.team1018.robot.commands.paddles.PaddlesOutCommand;
 
@@ -29,6 +30,10 @@ public class Paddles extends Subsystem {
 
     public void paddlesIn() {
         paddles.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("Paddle State: ", paddles.get() == DoubleSolenoid.Value.kForward ? "Paddles Out" : "Paddles In");
     }
 
     public void initDefaultCommand() {

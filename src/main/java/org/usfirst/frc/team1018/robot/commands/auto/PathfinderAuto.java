@@ -29,6 +29,7 @@ public class PathfinderAuto extends Command {
         left.configureEncoder(drivetrain.getLeftEncoderTicks(), drivetrain.CONFIG.ENCODER_TICKS_PER_REV_CFG, drivetrain.CONFIG.WHEEL_DIAMETER_M_CFG);
         right.configureEncoder(drivetrain.getRightEncoderTicks(), drivetrain.CONFIG.ENCODER_TICKS_PER_REV_CFG, drivetrain.CONFIG.WHEEL_DIAMETER_M_CFG);
         left.configurePIDVA(1.0, 0.0, 0.0, 1 / drivetrain.CONFIG.TRAJECTORY_CFG.max_velocity, 0);
+        right.configurePIDVA(1.0, 0.0, 0.0, 1/drivetrain.CONFIG.TRAJECTORY_CFG.max_velocity, 0);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -43,7 +44,7 @@ public class PathfinderAuto extends Command {
 
         double turn = 0.8 * (-1.0/80.0) * angleDifference;
 
-        drivetrain.setLeftRightMotors(l + turn, l - turn);
+        drivetrain.setLeftRightMotors(l - turn, r + turn);
     }
 
     // Make this return true when this Command no longer needs to run execute()

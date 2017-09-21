@@ -10,10 +10,7 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Waypoint;
 import org.usfirst.frc.team1018.robot.commands.auto.PathfinderAuto;
 import org.usfirst.frc.team1018.robot.pathfinder.PathfinderWaypoints;
-import org.usfirst.frc.team1018.robot.subsystems.Brakes;
-import org.usfirst.frc.team1018.robot.subsystems.Climber;
-import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
-import org.usfirst.frc.team1018.robot.subsystems.GearRotator;
+import org.usfirst.frc.team1018.robot.subsystems.*;
 
 /**
  * @author Ryan Blue
@@ -28,6 +25,7 @@ public class Robot extends IterativeRobot {
     private static Drivetrain drivetrain;
     private static Climber climber;
     private static Brakes brakes;
+    private static Paddles paddles;
     private static GearRotator gearRotator;
     Command autonomousCommand;
     SendableChooser<Waypoint[]> chooser = new SendableChooser<>();
@@ -38,11 +36,13 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
-        chooser.addDefault("Blue Right Peg", PathfinderWaypoints.BLUE_RIGHT);
+        chooser.addObject("Blue Right Peg", PathfinderWaypoints.BLUE_RIGHT);
+        chooser.addObject("Blue Left Peg", PathfinderWaypoints.BLUE_LEFT);
         SmartDashboard.putData("Autonomous:", chooser);
         drivetrain = Drivetrain.getInstance();
         climber = Climber.getInstance();
         brakes = Brakes.getInstance();
+        paddles = Paddles.getInstance();
         gearRotator = GearRotator.getInstance();
         oi = OI.getInstance();
     }
@@ -54,11 +54,13 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void disabledInit() {
+        outputAllToSmartDashboard();
         gearRotator.disable();
     }
 
     @Override
     public void disabledPeriodic() {
+        SmartDashboard.putNumber("Yaw", drivetrain.getYaw());
         Scheduler.getInstance().run();
     }
 
@@ -77,13 +79,6 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
         autonomousCommand = new PathfinderAuto(chooser.getSelected());
 
-		/*
-         * String autoSelected = SmartDashboard.getString("Auto Selector",
-		 * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-		 * = new MyAutoCommand(); break; case "Default Auto": default:
-		 * autonomousCommand = new ExampleCommand(); break; }
-		 */
-
         // schedule the autonomous command (example)
         if(autonomousCommand != null)
             autonomousCommand.start();
@@ -94,6 +89,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
+        outputAllToSmartDashboard();
         gearRotator.disable();
         Scheduler.getInstance().run();
     }
@@ -114,6 +110,7 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
+        outputAllToSmartDashboard();
         drivetrain.mecanumDrive(oi.getX(), oi.getY(), oi.getTurn());
         Scheduler.getInstance().run();
     }
@@ -123,6 +120,16 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void testPeriodic() {
+        outputAllToSmartDashboard();
         LiveWindow.run();
+    }
+
+    public void outputAllToSmartDashboard() {
+        drivetrain.outputToSmartDashboard();
+        climber.outputToSmartDashboard();
+        brakes.outputToSmartDashboard();
+        paddles.outputToSmartDashboard();
+        gearRotator.outputToSmartDashboard();
+
     }
 }

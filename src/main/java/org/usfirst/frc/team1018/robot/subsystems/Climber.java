@@ -2,6 +2,7 @@ package org.usfirst.frc.team1018.robot.subsystems;
 
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
 /**
@@ -36,9 +37,14 @@ public class Climber extends Subsystem {
 
     public void stop() {
         lowerClimber.set(0);
-        lowerClimber.set(0);
+        upperClimber.set(0);
     }
 
+    public void outputToSmartDashboard() {
+        String state;
+        if(Math.abs(upperClimber.get()) == 0) state = "Off"; else if(upperClimber.get()>0) state = "Up"; else state = "Down";
+        SmartDashboard.putString("Climber State: ", state);
+    }
     public void initDefaultCommand() {
         // Set the default command, if any, for a subsystem here. Example:
         //    setDefaultCommand(new MySpecialCommand());

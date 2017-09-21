@@ -50,7 +50,7 @@ public final class RobotConfig {
 
         public final double WHEELBASE_WIDTH_M_CFG = 0.635;
 
-        public final Trajectory.Config TRAJECTORY_CFG = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST, 0.05, 2.5, 2, 60);
+        public final Trajectory.Config TRAJECTORY_CFG = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_FAST, 0.05, 1.25, 1, 60);
 
         private DrivetrainConfig() {}
     }

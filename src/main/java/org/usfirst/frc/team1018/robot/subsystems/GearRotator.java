@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.lib.LidarLite;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
@@ -102,6 +103,13 @@ public class GearRotator extends Subsystem {
         return instance;
     }
 
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("State: ", stateMachine.getState().toString());
+        SmartDashboard.putNumber("LIDAR Distance: ", getLidarDistance());
+        SmartDashboard.putBoolean("Banner: ", isGearAligned());
+        SmartDashboard.putBoolean("Override: ", override);
+    }
+
     public void initDefaultCommand() {
         // Set the default command, if any, for a subsystem here. Example:
         //    setDefaultCommand(new MySpecialCommand());
@@ -126,6 +134,10 @@ class GearStateMachine {
         setState(State.WAITING);
     }
 
+    public State getState() {
+        return state;
+    }
+
     public enum State implements IState {
         WAITING {
             public boolean process(GearStateMachine stateMachine, boolean gearAligned, double lidar) {
@@ -146,7 +158,7 @@ class GearStateMachine {
                 if(gearAligned) {
                     stateMachine.setState(SENSING);
                 }
-                return true;
+                return false;
             }
         },
         GEAR_READY {
