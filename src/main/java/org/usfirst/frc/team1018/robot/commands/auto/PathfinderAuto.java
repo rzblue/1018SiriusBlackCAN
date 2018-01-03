@@ -65,7 +65,7 @@ public class PathfinderAuto extends Command {
 
         double turn = 0.8 * (-1.0 / 80.0) * angleDifference;
 
-        drivetrain.setLeftRightMotors(l - turn, r + turn);
+        drivetrain.driveTank(l - turn, r + turn);
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -7,12 +7,12 @@ import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
 /**
  * @author Ryan Blue
  */
-public class DrivePID extends Command {
+public class DriveDistancePID extends Command {
 
     private Drivetrain drivetrain = Drivetrain.getInstance();
-    private PIDController pidController = new PIDController(0, 0, 0, drivetrain, drivetrain);
+//    private PIDController pidController = new PIDController(0, 0, 0, drivetrain, drivetrain);
 
-    public DrivePID() {
+    public DriveDistancePID() {
         requires(drivetrain);
     }
 

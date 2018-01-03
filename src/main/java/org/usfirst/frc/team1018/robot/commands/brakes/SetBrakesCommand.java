@@ -6,11 +6,11 @@ import org.usfirst.frc.team1018.robot.subsystems.Brakes;
 /**
  * @author Ryan Blue
  */
-public class BrakesCommand extends InstantCommand {
+public class SetBrakesCommand extends InstantCommand {
     private Brakes brakes = Brakes.getInstance();
     private boolean brakesDown;
 
-    public BrakesCommand(boolean brakesDown) {
+    public SetBrakesCommand(boolean brakesDown) {
         requires(brakes);
         this.brakesDown = brakesDown;
     }

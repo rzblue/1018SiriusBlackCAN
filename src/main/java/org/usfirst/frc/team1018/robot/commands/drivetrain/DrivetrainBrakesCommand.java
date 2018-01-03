@@ -1,6 +1,7 @@
-package org.usfirst.frc.team1018.robot.commands;
+package org.usfirst.frc.team1018.robot.commands.drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
 
 /**
@@ -9,7 +10,7 @@ import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
  * Sets the drivetrain's brake mode
  * @see Drivetrain
  */
-public class DrivetrainBrakesCommand extends Command {
+public class DrivetrainBrakesCommand extends InstantCommand {
     Drivetrain drivetrain = Drivetrain.getInstance();
     boolean brake;
 
