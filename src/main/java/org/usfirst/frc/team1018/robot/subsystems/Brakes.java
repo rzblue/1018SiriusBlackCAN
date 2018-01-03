@@ -4,24 +4,20 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
-import org.usfirst.frc.team1018.robot.commands.brakes.BrakesUpCommand;
+import org.usfirst.frc.team1018.robot.commands.brakes.SetBrakesCommand;
 
 /**
  * @author Ryan Blue
+ * <p>
+ * Represents the Brakes subsystem
  */
 public class Brakes extends Subsystem {
-    public RobotConfig.BrakesConfig CONFIG = RobotConfig.BRAKES_CONFIG;
-
     private static Brakes instance;
-
+    public RobotConfig.BrakesConfig CONFIG = RobotConfig.BRAKES_CONFIG;
     private DoubleSolenoid brakesSolenoid = new DoubleSolenoid(CONFIG.BRAKES_FOR_SOL, CONFIG.BRAKES_REV_SOL);
 
     private Brakes() {
-        release();
-    }
-
-    public void release() {
-        brakesSolenoid.set(DoubleSolenoid.Value.kReverse);
+        setDown(false);
     }
 
     public static Brakes getInstance() {
@@ -29,12 +25,15 @@ public class Brakes extends Subsystem {
         return instance;
     }
 
-    public void set() {
-        brakesSolenoid.set(DoubleSolenoid.Value.kForward);
+    /**
+     * Sets the brakes
+     */
+    public void setDown(boolean down) {
+        brakesSolenoid.set(down ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
     }
 
     public void initDefaultCommand() {
-        setDefaultCommand(new BrakesUpCommand());
+        setDefaultCommand(new SetBrakesCommand(false));
     }
 
     public void outputToSmartDashboard() {

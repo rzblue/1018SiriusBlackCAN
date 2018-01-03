@@ -8,29 +8,29 @@ import java.util.TimerTask;
 
 /**
  * Driver for a Lidar Lite sensor
+ * //TODO: GET THIS DANG THING WORKING (apparently 254 can't get it to work either...)
  */
 public class LidarLiteSensor {
-    private I2C mI2C;
-    private byte[] mDistance;
-    private java.util.Timer mUpdater;
-    private boolean mHasSignal;
-
     private final static int LIDAR_ADDR = 0x62;
     private final static int LIDAR_CONFIG_REGISTER = 0x00;
     private final static int LIDAR_DISTANCE_REGISTER = 0x8f;
+    private I2C i2C;
+    private byte[] distance;
+    private java.util.Timer updater;
+    private boolean hasSignal;
 
     public LidarLiteSensor(Port port) {
-        mI2C = new I2C(port, LIDAR_ADDR);
-        mDistance = new byte[2];
-        mUpdater = new java.util.Timer();
-        mHasSignal = false;
+        i2C = new I2C(port, LIDAR_ADDR);
+        distance = new byte[2];
+        updater = new java.util.Timer();
+        hasSignal = false;
     }
 
     /**
-     * @return Distance in meters
+     * @return Distance in inches
      */
     public double getDistance() {
-        int distCm = (int) Integer.toUnsignedLong(mDistance[0] << 8) + Byte.toUnsignedInt(mDistance[1]);
+        int distCm = (int) Integer.toUnsignedLong(distance[0] << 8) + Byte.toUnsignedInt(distance[1]);
         return distCm / 2.54;
     }
 
@@ -38,7 +38,7 @@ public class LidarLiteSensor {
      * @return true iff the sensor successfully provided data last loop
      */
     public boolean hasSignal() {
-        return mHasSignal;
+        return hasSignal;
     }
 
     /**
@@ -58,27 +58,27 @@ public class LidarLiteSensor {
                 update();
             }
         };
-        mUpdater.scheduleAtFixedRate(task, 0, period);
+        updater.scheduleAtFixedRate(task, 0, period);
     }
 
     public void stop() {
-        mUpdater.cancel();
-        mUpdater = new java.util.Timer();
+        updater.cancel();
+        updater = new java.util.Timer();
     }
 
     private void update() {
-        if (mI2C.write(LIDAR_CONFIG_REGISTER, 0x04)) {
+        if(i2C.write(LIDAR_CONFIG_REGISTER, 0x04)) {
             // the write failed to ack
-            mHasSignal = false;
+            hasSignal = false;
             return;
         }
         Timer.delay(0.04); // Delay for measurement to be taken
-        if (!mI2C.read(LIDAR_DISTANCE_REGISTER, 2, mDistance)) {
+        if(!i2C.read(LIDAR_DISTANCE_REGISTER, 2, distance)) {
             // the read failed
-            mHasSignal = false;
+            hasSignal = false;
             return;
         }
-        mHasSignal = true;
+        hasSignal = true;
         Timer.delay(0.005); // Delay to prevent over polling
     }
 }

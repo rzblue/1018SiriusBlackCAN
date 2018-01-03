@@ -12,9 +12,8 @@ import org.usfirst.frc.team1018.robot.RobotConfig;
  * @author Ryan Blue
  */
 public class GearRotator extends Subsystem {
-    public RobotConfig.GearRotatorConfig CONFIG = RobotConfig.GEAR_ROTATOR_CONFIG;
-
     private static GearRotator instance;
+    public RobotConfig.GearRotatorConfig CONFIG = RobotConfig.GEAR_ROTATOR_CONFIG;
     private boolean override;
     private boolean enabled;
     private GearStateMachine stateMachine = new GearStateMachine();
@@ -42,6 +41,11 @@ public class GearRotator extends Subsystem {
     private GearRotator() {
         rotatorMotor.setInverted(true);
         notifier = new Notifier(stateMachineRunnable);
+    }
+
+    public static GearRotator getInstance() {
+        if(instance == null) instance = new GearRotator();
+        return instance;
     }
 
     /**
@@ -96,11 +100,6 @@ public class GearRotator extends Subsystem {
         stateMachine.reset();
         notifier.startPeriodic(period);
         enabled = true;
-    }
-
-    public static GearRotator getInstance() {
-        if(instance == null) instance = new GearRotator();
-        return instance;
     }
 
     public void outputToSmartDashboard() {
@@ -177,6 +176,3 @@ class GearStateMachine {
         public boolean process(GearStateMachine stateMachine, boolean gearAligned, double lidar);
     }
 }
-
-
-

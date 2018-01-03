@@ -5,6 +5,11 @@ import org.usfirst.frc.team1018.robot.subsystems.GearRotator;
 
 /**
  * @author Ryan Blue
+ *
+ * Overrides the automatic gear rotation
+ *
+ * @see GearRotator
+ * @see org.usfirst.frc.team1018.robot.subsystems.GearStateMachine
  */
 public class RotateGearOverrideCommand extends Command {
     private GearRotator gearRotator = GearRotator.getInstance();

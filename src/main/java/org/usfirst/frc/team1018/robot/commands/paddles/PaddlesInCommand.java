@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1018.robot.commands.paddles;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team1018.robot.subsystems.Brakes;
 import org.usfirst.frc.team1018.robot.subsystems.Paddles;
 
 /**
  * @author Ryan Blue
+ * <p>
+ * Flips up the gear paddles
+ * @see Paddles
  */
 public class PaddlesInCommand extends Command {
     private Paddles paddles = Paddles.getInstance();

@@ -1,40 +1,48 @@
-package org.usfirst.frc.team1018.robot.commands.climber;
+package org.usfirst.frc.team1018.robot.commands.auto;
 
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team1018.lib.BasicCommand;
-import org.usfirst.frc.team1018.robot.subsystems.Climber;
+import org.usfirst.frc.team1018.robot.subsystems.Drivetrain;
 
 /**
  * @author Ryan Blue
  */
-public class ClimbUpCommand extends Command {
-    private Climber climber = Climber.getInstance();
+public class DrivePID extends Command {
 
-    public ClimbUpCommand() {
-        requires(climber);
+    private Drivetrain drivetrain = Drivetrain.getInstance();
+    private PIDController pidController = new PIDController(0, 0, 0, drivetrain, drivetrain);
+
+    public DrivePID() {
+        requires(drivetrain);
     }
 
     // Called just before this Command runs the first time
+    @Override
     protected void initialize() {
-        climber.climbUp();
+
     }
 
     // Called repeatedly when this Command is scheduled to run
+    @Override
     protected void execute() {
 
     }
 
     // Make this return true when this Command no longer needs to run execute()
+    @Override
     protected boolean isFinished() {
         return false;
     }
 
     // Called once after isFinished() returns true
+    @Override
     protected void end() {
-        climber.stop();
+
     }
+
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
+    @Override
     protected void interrupted() {
         end();
     }

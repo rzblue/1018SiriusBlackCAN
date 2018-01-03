@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1018.robot.commands.climber;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team1018.lib.BasicCommand;
 import org.usfirst.frc.team1018.robot.subsystems.Climber;
 
 /**
  * @author Ryan Blue
+ *
+ * Runs the climber in reverse
+ * @see Climber
  */
 public class ClimbDownCommand extends Command {
     private Climber climber = Climber.getInstance();
@@ -33,6 +35,7 @@ public class ClimbDownCommand extends Command {
     protected void end() {
         climber.stop();
     }
+
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {

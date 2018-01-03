@@ -3,11 +3,12 @@ package org.usfirst.frc.team1018.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import org.usfirst.frc.team1018.lib.util.MultipleJoystickButton;
-import org.usfirst.frc.team1018.robot.commands.brakes.BrakesDownCommand;
-import org.usfirst.frc.team1018.robot.commands.climber.ClimbDownCommand;
-import org.usfirst.frc.team1018.robot.commands.climber.ClimbUpCommand;
+import org.usfirst.frc.team1018.robot.commands.brakes.SetBrakesCommand;
+import org.usfirst.frc.team1018.robot.commands.drivetrain.DrivetrainBrakesCommand;
+import org.usfirst.frc.team1018.robot.commands.climber.ClimbCommand;
 import org.usfirst.frc.team1018.robot.commands.gearholder.RotateGearOverrideCommand;
 import org.usfirst.frc.team1018.robot.commands.paddles.PaddlesInCommand;
+import org.usfirst.frc.team1018.robot.subsystems.Climber;
 
 /**
  * @author Ryan Blue
@@ -21,6 +22,7 @@ public class OI {
     private Joystick rightStick = new Joystick(1);
     private Joystick buttonPanel = new Joystick(2);
 
+    private JoystickButton dtBrakesButton = new JoystickButton(rightStick, 1);
     private MultipleJoystickButton climbDownButton = new MultipleJoystickButton(buttonPanel, 1, 11);
     private MultipleJoystickButton climbUpButton = new MultipleJoystickButton(buttonPanel, 2, 16);
     private MultipleJoystickButton paddlesInButton = new MultipleJoystickButton(buttonPanel, 2, 11);
@@ -28,11 +30,17 @@ public class OI {
     private JoystickButton gearRotatorButton = new JoystickButton(buttonPanel, 15);
 
     private OI() {
-        climbUpButton.whileHeld(new ClimbUpCommand());
-        climbDownButton.whileHeld(new ClimbDownCommand());
+        dtBrakesButton.whileHeld(new DrivetrainBrakesCommand(true));
+        climbUpButton.whileHeld(new ClimbCommand(Climber.State.CLIMB_UP));
+        climbDownButton.whileHeld(new ClimbCommand(Climber.State.CLIMB_DOWN));
         paddlesInButton.whileHeld(new PaddlesInCommand());
-        brakesButton.whileHeld(new BrakesDownCommand());
+        brakesButton.whileHeld(new SetBrakesCommand(true));
         gearRotatorButton.whileHeld(new RotateGearOverrideCommand());
+    }
+
+    public static OI getInstance() {
+        if(instance == null) instance = new OI();
+        return instance;
     }
 
     public double getX() {
@@ -47,8 +55,8 @@ public class OI {
         return rightStick.getX();
     }
 
-    public static OI getInstance() {
-        if(instance == null) instance = new OI();
-        return instance;
+    public boolean getAlignButton() {
+        return leftStick.getRawButton(1);
     }
+
 }

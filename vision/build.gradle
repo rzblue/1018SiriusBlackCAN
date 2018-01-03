@@ -1,24 +1,23 @@
-// Do not mess with the following 6 lines
 plugins {
     id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'org.hidetake.ssh' version '2.9.0'
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
 
-// This is where you select which operating system to build for.
-
-// Uncomment the line below to build for windows
-//ext.buildType = "windows"
-
+ext {
+    buildType = "arm-raspbian"
+    remoteDirectory = "/home/pi"
+}
 // Uncomment the line below to build for a Raspberry Pi running raspbian
-ext.buildType = "arm-raspbian"
+//ext.buildType = "arm-raspbian"
 
 // Uncomment the line below to build for an armhf device such as a Jetson or a Beaglebone Black
 //ext.buildType = "armhf"
 
 // Change the line below if you change the name of your main Java class
-mainClassName = 'Main'
+mainClassName = 'org.usfirst.frc.team1018.vision.Main'
 // Change the line below to change the name of the output jar
 def projectName = 'CameraVision'
 
@@ -36,6 +35,8 @@ dependencies {
     compile ntcoreDep()
     compile cscoreDep()
     compile 'org.opencv:opencv-java:3.1.0'
+    compile 'com.fazecast:jSerialComm:1.3.11'
+    testCompile 'junit:junit:4.12'
 }
 
 jar {
@@ -69,7 +70,11 @@ task writeExecuteScript() {
             runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
         } else {
             def runFile = new File("${buildDir}/run${projectName}")
-            runFile.write "java -Djava.library.path=. -jar ${projectName}-all.jar"
+            runFile.write "#!/bin/bash\n" +
+                    "SCRIPT=\$(readlink -f \"\$0\")\n" +
+                    "LIBPATH=\$(dirname \"\$SCRIPT\")\n" +
+                    "echo Loading libraries from: \$LIBPATH\n" +
+                    "java -Djava.library.path=\$LIBPATH -jar \$LIBPATH/${projectName}-all.jar\n"
         }
     }
 }
@@ -128,3 +133,29 @@ run.dependsOn unzipOpenCv
 clean {
     delete outputDirectory
 }
+
+ssh.settings {
+    knownHosts = allowAnyHosts
+}
+
+remotes {
+    raspi {
+        host = 'vision-1018-frc.local'
+        user = 'pi'
+        password = 'raspberry'
+    }
+}
+
+task deploy() {
+    doLast {
+        ssh.run {
+            session(remotes.raspi) {
+                execute "sudo systemctl stop vision.service"
+                put from: outputDirectory, into: '/home/pi/vision'
+                execute "sudo chmod 777 /home/pi/vision/vision-output/run${projectName}"
+                execute "sudo systemctl start vision.service"
+            }
+        }
+    }
+}
+

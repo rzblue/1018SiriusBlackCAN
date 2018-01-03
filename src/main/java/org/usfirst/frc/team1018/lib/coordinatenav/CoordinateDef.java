@@ -4,13 +4,13 @@ package org.usfirst.frc.team1018.lib.coordinatenav;
  * @author Ryan Blue
  */
 public class CoordinateDef {
-    public double angle;
-    public double encoder;
-    public boolean fuelOut;
-    public boolean pegDriver;
-    public boolean encoderReset;
-    public double maxDriveSpeed;
-    public double waitTime;
+    public final double angle;
+    public final double encoder;
+    public final boolean fuelOut;
+    public final boolean pegDriver;
+    public final boolean encoderReset;
+    public final double maxDriveSpeed;
+    public final double waitTime;
 
     public CoordinateDef(double angle, double encoder, boolean fuelOut, boolean pegDriver, boolean encoderReset, double maxDriveSpeed, double waitTime) {
         this.angle = angle;

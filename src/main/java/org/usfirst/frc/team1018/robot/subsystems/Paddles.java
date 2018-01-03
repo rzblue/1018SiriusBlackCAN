@@ -10,10 +10,8 @@ import org.usfirst.frc.team1018.robot.commands.paddles.PaddlesOutCommand;
  * @author Ryan Blue
  */
 public class Paddles extends Subsystem {
-    public RobotConfig.PaddlesConfig CONFIG = RobotConfig.PADDLES_CONFIG;
-
     private static Paddles instance;
-
+    public RobotConfig.PaddlesConfig CONFIG = RobotConfig.PADDLES_CONFIG;
     private DoubleSolenoid paddles = new DoubleSolenoid(CONFIG.PADDLES_FOR_SOL, CONFIG.PADDLES_REV_SOL);
 
     private Paddles() {

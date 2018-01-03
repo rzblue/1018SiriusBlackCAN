@@ -5,6 +5,10 @@ plugins {
     id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
 }
 
+repositories {
+    mavenCentral()
+}
+
 frc {
     team = "1018"
     robotClass = "org.usfirst.frc.team1018.robot.Robot"
@@ -15,9 +19,11 @@ wpi {
 
 dependencies {
     compile wpilib()
-    //compile talonSrx()
+    compile talonSrx()
     compile navx()
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':vision')
+    testCompile 'junit:junit:4.12'
 }
 
 def robotManifest = {
@@ -33,4 +39,3 @@ jar {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.4'
 }
-

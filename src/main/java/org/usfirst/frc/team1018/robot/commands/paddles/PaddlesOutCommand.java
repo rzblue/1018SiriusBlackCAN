@@ -5,6 +5,9 @@ import org.usfirst.frc.team1018.robot.subsystems.Paddles;
 
 /**
  * @author Ryan Blue
+ *
+ * Flips down the paddles
+ * @see Paddles
  */
 public class PaddlesOutCommand extends Command {
     private Paddles paddles = Paddles.getInstance();

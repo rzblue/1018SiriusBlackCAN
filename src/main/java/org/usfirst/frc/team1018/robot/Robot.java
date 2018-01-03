@@ -1,17 +1,20 @@
 package org.usfirst.frc.team1018.robot;
 
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.Utility;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Waypoint;
+import org.usfirst.frc.team1018.lib.util.Utils;
 import org.usfirst.frc.team1018.robot.commands.auto.PathfinderAuto;
 import org.usfirst.frc.team1018.robot.pathfinder.PathfinderWaypoints;
 import org.usfirst.frc.team1018.robot.subsystems.*;
+import org.usfirst.frc.team1018.lib.vision.VisionNetworkTable;
 
 /**
  * @author Ryan Blue
@@ -28,6 +31,7 @@ public class Robot extends IterativeRobot {
     private static Brakes brakes;
     private static Paddles paddles;
     private static GearRotator gearRotator;
+    PowerDistributionPanel pdp = new PowerDistributionPanel();
     Command autonomousCommand;
     SendableChooser<Waypoint[]> chooser = new SendableChooser<>();
 
@@ -37,14 +41,22 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void robotInit() {
-        new Thread(() -> {
+        /*new Thread(() -> {
             UsbCamera camera = new UsbCamera("CoprocessorCamera", 0);
             // Set the resolution for our camera, since this is over USB
-            camera.setResolution(320, 240);
+            camera.setResolution(160, 120);
+            //camera.setResolution(480, 260);
+            camera.setBrightness(53);
+            camera.getProperty("contrast").set(100);
+            camera.getProperty("saturation").set(100);
+            camera.setWhiteBalanceAuto();
+            camera.getProperty("gain").set(0);
+            camera.getProperty("sharpness").set(51);
+            camera.setExposureManual(1);
             // This stores our reference to our mjpeg server for streaming the input image
             MjpegServer inputStream = new MjpegServer("MJPEG Server", 1185);
             inputStream.setSource(camera);
-        }).start();
+        }).start();*/
         chooser.addObject("Blue Right Peg", PathfinderWaypoints.BLUE_RIGHT);
         chooser.addObject("Blue Left Peg", PathfinderWaypoints.BLUE_LEFT);
         SmartDashboard.putData("Autonomous:", chooser);
@@ -54,6 +66,8 @@ public class Robot extends IterativeRobot {
         paddles = Paddles.getInstance();
         gearRotator = GearRotator.getInstance();
         oi = OI.getInstance();
+        drivetrain.resetGyro();
+        //while(!VisionNetworkTable.getInstance().getStatus()) Timer.delay(0.5);
     }
 
     /**
@@ -63,14 +77,17 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void disabledInit() {
-        outputAllToSmartDashboard();
         gearRotator.disable();
     }
 
     @Override
     public void disabledPeriodic() {
-        SmartDashboard.putNumber("Yaw", drivetrain.getYaw());
         Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        outputAllToSmartDashboard();
     }
 
     /**
@@ -86,7 +103,10 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousInit() {
-        autonomousCommand = new PathfinderAuto(chooser.getSelected());
+        if(chooser.getSelected() != null) {
+
+            autonomousCommand = new PathfinderAuto(chooser.getSelected());
+        }
 
         // schedule the autonomous command (example)
         if(autonomousCommand != null)
@@ -98,7 +118,6 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        outputAllToSmartDashboard();
         gearRotator.disable();
         Scheduler.getInstance().run();
     }
@@ -119,8 +138,11 @@ public class Robot extends IterativeRobot {
      */
     @Override
     public void teleopPeriodic() {
-        outputAllToSmartDashboard();
-        drivetrain.mecanumDrive(oi.getX(), oi.getY(), oi.getTurn());
+        if(oi.getAlignButton()) {
+            drivetrain.driveSimpleArcade(Utils.limit(-oi.getY(), 0.5), 0.5 * VisionNetworkTable.getInstance().getTargetAimingCenterX());
+        } else {
+            drivetrain.mecanumDrive(oi.getX(), oi.getY(), oi.getTurn());
+        }
         Scheduler.getInstance().run();
     }
 
@@ -139,6 +161,7 @@ public class Robot extends IterativeRobot {
         brakes.outputToSmartDashboard();
         paddles.outputToSmartDashboard();
         gearRotator.outputToSmartDashboard();
-
+        SmartDashboard.putNumber("Upper Climber Current: ", pdp.getCurrent(12));
+        SmartDashboard.putNumber("Lower Climber Current: ", pdp.getCurrent(3));
     }
 }
