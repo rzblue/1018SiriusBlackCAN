@@ -8,3 +8,5 @@
 .project
 /.settings/
 /out/
+/bin/
+/vision-output/

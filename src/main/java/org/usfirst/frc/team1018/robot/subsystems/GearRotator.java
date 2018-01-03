@@ -4,22 +4,22 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import org.usfirst.frc.team1018.lib.LidarLite;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1018.lib.LidarLiteSensor;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
 /**
  * @author Ryan Blue
  */
 public class GearRotator extends Subsystem {
-    public RobotConfig.GearRotatorConfig CONFIG = RobotConfig.GEAR_ROTATOR_CONFIG;
-
     private static GearRotator instance;
+    public RobotConfig.GearRotatorConfig CONFIG = RobotConfig.GEAR_ROTATOR_CONFIG;
     private boolean override;
     private boolean enabled;
     private GearStateMachine stateMachine = new GearStateMachine();
     private TalonSRX rotatorMotor = new TalonSRX(CONFIG.GEAR_ROTATOR_PWM);
     private DigitalInput banner = new DigitalInput(CONFIG.BANNER_DIO);
-    private LidarLite lidar = new LidarLite(CONFIG.LIDAR_I2C);
+    private LidarLiteSensor lidar = new LidarLiteSensor(CONFIG.LIDAR_I2C);
     private Runnable stateMachineRunnable = new Runnable() {
         @Override
         public void run() {
@@ -41,6 +41,11 @@ public class GearRotator extends Subsystem {
     private GearRotator() {
         rotatorMotor.setInverted(true);
         notifier = new Notifier(stateMachineRunnable);
+    }
+
+    public static GearRotator getInstance() {
+        if(instance == null) instance = new GearRotator();
+        return instance;
     }
 
     /**
@@ -72,7 +77,7 @@ public class GearRotator extends Subsystem {
      * @return
      */
     public double getLidarDistance() {
-        return lidar.getDistanceInches();
+        return lidar.getDistance();
     }
 
     /**
@@ -97,9 +102,11 @@ public class GearRotator extends Subsystem {
         enabled = true;
     }
 
-    public static GearRotator getInstance() {
-        if(instance == null) instance = new GearRotator();
-        return instance;
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("State: ", stateMachine.getState().toString());
+        SmartDashboard.putNumber("LIDAR Distance: ", getLidarDistance());
+        SmartDashboard.putBoolean("Banner: ", isGearAligned());
+        SmartDashboard.putBoolean("Override: ", override);
     }
 
     public void initDefaultCommand() {
@@ -126,6 +133,10 @@ class GearStateMachine {
         setState(State.WAITING);
     }
 
+    public State getState() {
+        return state;
+    }
+
     public enum State implements IState {
         WAITING {
             public boolean process(GearStateMachine stateMachine, boolean gearAligned, double lidar) {
@@ -146,7 +157,7 @@ class GearStateMachine {
                 if(gearAligned) {
                     stateMachine.setState(SENSING);
                 }
-                return true;
+                return false;
             }
         },
         GEAR_READY {
@@ -165,6 +176,3 @@ class GearStateMachine {
         public boolean process(GearStateMachine stateMachine, boolean gearAligned, double lidar);
     }
 }
-
-
-

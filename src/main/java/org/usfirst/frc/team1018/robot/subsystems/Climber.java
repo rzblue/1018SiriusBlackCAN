@@ -2,18 +2,18 @@ package org.usfirst.frc.team1018.robot.subsystems;
 
 import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1018.robot.RobotConfig;
 
 /**
  * @author Ryan Blue
  */
 public class Climber extends Subsystem {
-    public RobotConfig.ClimberConfig CONFIG = RobotConfig.CLIMBER_CONFIG;
-
     private static Climber instance;
-
+    public RobotConfig.ClimberConfig CONFIG = RobotConfig.CLIMBER_CONFIG;
     private TalonSRX lowerClimber = new TalonSRX(CONFIG.CLIMBER_LOWER_PWM);
     private TalonSRX upperClimber = new TalonSRX(CONFIG.CLIMBER_UPPER_PWM);
+    private State state = State.OFF;
 
     private Climber() {
         lowerClimber.setInverted(true);
@@ -24,24 +24,31 @@ public class Climber extends Subsystem {
         return instance;
     }
 
-    public void climbUp() {
-        lowerClimber.set(1);
-        upperClimber.set(1);
+    public void setState(State state) {
+        this.state = state;
+        lowerClimber.set(state.value);
+        upperClimber.set(state.value);
     }
 
-    public void climbDown() {
-        lowerClimber.set(-1);
-        upperClimber.set(-1);
-    }
-
-    public void stop() {
-        lowerClimber.set(0);
-        lowerClimber.set(0);
+    public void outputToSmartDashboard() {
+        SmartDashboard.putString("Climber State: ", state.toString());
     }
 
     public void initDefaultCommand() {
-        // Set the default command, if any, for a subsystem here. Example:
-        //    setDefaultCommand(new MySpecialCommand());
+        //No default command
+    }
+
+    public enum State {
+
+        CLIMB_UP(1),
+        CLIMB_DOWN(-1),
+        OFF(0);
+
+        public double value;
+
+        State(double value) {
+            this.value = value;
+        }
     }
 }
 
